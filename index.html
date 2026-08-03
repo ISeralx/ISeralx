@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALEJANDRO SOLER — Physicist · Quantitative Research · Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@200;300;400;500;600;700;800&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000; --txt:#FFFFFF; --muted:#9A9AA2; --faint:#6A6A72;
+    --line:rgba(255,255,255,.13); --line2:rgba(255,255,255,.07);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:"Barlow","Helvetica Neue",Arial,sans-serif;
+    font-weight:300; line-height:1.6; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .cond{font-family:"Barlow Semi Condensed","Barlow","Helvetica Neue",sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+  a{color:inherit;text-decoration:none}
+  .up{text-transform:uppercase}
+
+  /* atmospheric glow */
+  .glow{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse 90% 55% at 50% -8%, rgba(58,66,90,.45), rgba(0,0,0,0) 60%);}
+  .content{position:relative;z-index:1}
+
+  .ph{color:#fff;border-bottom:1px dotted #fff;opacity:.55}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
+    padding:20px 32px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,0));}
+  nav .brand{font-weight:600;letter-spacing:.3em}
+  nav .links{display:flex;gap:26px}
+  nav .links a{color:var(--muted);transition:color .2s}
+  nav .links a:hover{color:#fff}
+  @media(max-width:620px){nav .links{display:none}}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 70px}
+  .kicker{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);margin-bottom:30px}
+  .hero h1{font-family:"Barlow Semi Condensed",sans-serif;font-weight:700;text-transform:uppercase;
+    font-size:clamp(52px,12vw,128px);line-height:.92;letter-spacing:.01em;margin-bottom:26px}
+  .statement{font-weight:200;font-size:clamp(20px,3.2vw,34px);letter-spacing:.01em;line-height:1.2;max-width:780px;margin-bottom:28px}
+  .statement b{font-weight:600}
+  .lede{font-size:clamp(15px,1.9vw,18px);color:var(--muted);max-width:620px;font-weight:300}
+  .now{margin-top:18px;font-size:13px;letter-spacing:.05em;color:var(--faint);text-transform:uppercase}
+  .now b{color:var(--muted);font-weight:500}
+  .cta{margin-top:46px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+    padding:15px 28px;border:1px solid var(--line);transition:all .22s}
+  .btn:hover{background:#fff;color:#000;border-color:#fff}
+  .btn.solid{background:#fff;color:#000;border-color:#fff}
+  .btn.solid:hover{background:transparent;color:#fff;border-color:#fff}
+
+  /* SECTION SHELL */
+  section{padding:96px 0;border-top:1px solid var(--line2)}
+  .sec-label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:34px;
+    display:flex;align-items:center;gap:16px}
+  .sec-label::before{content:"";width:34px;height:1px;background:var(--muted)}
+  h2{font-family:"Barlow Semi Condensed",sans-serif;font-weight:700;text-transform:uppercase;
+    font-size:clamp(30px,5.5vw,56px);line-height:1;letter-spacing:.01em;margin-bottom:32px}
+
+  /* ABOUT */
+  .about p{font-size:clamp(16px,2.1vw,20px);color:#D6D6DA;max-width:760px;margin-bottom:20px;font-weight:300}
+  .about p b{color:#fff;font-weight:600}
+  .langs{margin-top:30px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .langs b{color:#fff;font-weight:500}
+
+  /* PROJECTS */
+  .proj{border-top:1px solid var(--line);padding:34px 0;display:grid;gap:8px;transition:padding-left .25s}
+  .proj:hover{padding-left:10px}
+  .proj:last-child{border-bottom:1px solid var(--line)}
+  .proj .ptag{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+  .proj h3{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;text-transform:uppercase;
+    font-size:clamp(22px,3.4vw,32px);line-height:1.04;letter-spacing:.01em}
+  .proj .meta{font-size:13px;letter-spacing:.05em;color:var(--faint);text-transform:uppercase}
+  .proj p{font-size:15.5px;color:#BDBDC4;max-width:780px;margin-top:8px;font-weight:300}
+  .proj p em{color:var(--muted);font-style:normal}
+  .stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);padding:5px 11px}
+  .chip.acc{color:#fff;border-color:rgba(255,255,255,.4)}
+  .plinks{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .plinks a{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+    border:1px solid var(--line);padding:9px 15px;transition:all .22s}
+  .plinks a:hover{background:#fff;color:#000;border-color:#fff}
+  /* featured project: text left, live visual right */
+  .proj.feat{align-items:center}
+  @media(min-width:860px){.proj.feat{grid-template-columns:1.55fr 1fr;gap:44px}}
+  .proj-body{display:grid;gap:8px;min-width:0}
+  .proj-media{min-width:0}
+  .proj-media canvas{width:100%;aspect-ratio:5/4;display:block;border:1px solid var(--line);background:#05060a}
+
+  /* SKILLS */
+  .skills{display:grid;grid-template-columns:1fr;gap:30px;margin-top:6px}
+  @media(min-width:680px){.skills{grid-template-columns:1fr 1fr}}
+  .skill-group h4{font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .skill-group p{font-size:16px;color:#D6D6DA;font-weight:300}
+
+  /* CONTACT */
+  .contact p{font-size:clamp(16px,2.1vw,19px);color:#BDBDC4;max-width:640px;margin-bottom:30px;font-weight:300}
+  .contact-grid{display:flex;flex-wrap:wrap;gap:14px}
+  .contact-grid a{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.12em;
+    text-transform:uppercase;border:1px solid var(--line);padding:15px 22px;transition:all .22s}
+  .contact-grid a:hover{background:#fff;color:#000;border-color:#fff}
+
+  footer{padding:54px 0;text-align:center;border-top:1px solid var(--line2)}
+  footer span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint)}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+
+<nav>
+  <div class="brand">A · SOLER</div>
+  <div class="links">
+    <a href="#work">Work</a>
+    <a href="#toolkit">Toolkit</a>
+    <a href="#contact">Contact</a>
+    <a href="cv_alejandro.pdf">CV</a>
+  </div>
+</nav>
+
+<div class="content">
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="kicker">Physicist · Quantitative Research · Engineering</div>
+    <h1>Alejandro<br>Soler</h1>
+    <p class="statement">I turn hard mathematics into <b>systems that ship.</b></p>
+    <p class="lede">Physicist and aerospace systems engineer. I take rigorous optimization and machine learning and deploy them — from spacecraft powered-descent guidance to a cross-venue execution engine trading real capital on prediction markets.</p>
+    <p class="now"><b>Currently</b> — MSc thesis on rocket-landing GNC · building Bolbee, an AI product for SMEs · preparing for quantitative research roles.</p>
+    <div class="cta">
+      <a class="btn solid" href="cv_alejandro.pdf">Download CV</a>
+      <a class="btn" href="#work">Selected Work</a>
+      <a class="btn" href="https://linkedin.com/" target="_blank">LinkedIn <span class="ph">[url]</span></a>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <div class="sec-label">01 — The Throughline</div>
+    <h2>Theory and<br>practice, fused.</h2>
+    <p>I got obsessed with the <b>P vs NP problem at 14</b> — not because I was going to solve it, but because attacking the impossible with pure reasoning never stopped being the thing I love most.</p>
+    <p>The pattern has held across every domain since: take a hard, open-ended problem, build the model, and <b>actually deploy it</b> where it has to work. Convex optimization to land a rocket. Multi-agent control to find what's hidden underground. A cross-venue execution engine trading my own capital on prediction markets. AI tools real businesses can use.</p>
+    <p>Scientific rigor, real deployment, and markets — that intersection <b>is</b> quantitative research. It's where I want to point everything I have, at the highest level.</p>
+    <div class="langs">Languages — <b>Spanish</b> Native · <b>English</b> C1 (Cambridge certified) · <b>Catalan</b> C1</div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="sec-label">02 — Selected Work</div>
+    <h2>What I've built.</h2>
+
+    <div class="proj feat">
+      <div class="proj-body">
+        <span class="ptag">Quant · Research + Real Capital</span>
+        <h3>The Magic Window — Cross-Venue Bitcoin Structure</h3>
+        <div class="meta">Independent · Feb–May 2026 · Rust · Research note 2026</div>
+        <p>Found a predictable settlement gap between <b>Polymarket and Kalshi</b> on hourly Bitcoin: the disagreement between their two price oracles is the <b>USDT/USD stablecoin basis</b> — signed, and forecastable before the hour resolves. Built a Rust execution engine to trade it, on AWS eu-west-1 (Ireland) for proximity to the venues; wound it down when Spain banned both. Wrote it up as a <b>public research note</b> — the mechanism validated on 1,350 real Kalshi settlements, and deliberately honest about what it does and does not prove.</p>
+        <div class="plinks">
+          <a href="the-magic-window.pdf" target="_blank">Read the note (PDF)</a>
+          <a href="https://iseralx.github.io/magic-window/" target="_blank">Interactive explainer</a>
+          <a href="https://github.com/ISeralx/magic-window" target="_blank">Code &amp; data (GitHub)</a>
+        </div>
+        <div class="stack"><span class="chip acc">Rust</span><span class="chip">Market Microstructure</span><span class="chip">Stablecoin Basis</span><span class="chip">AWS</span><span class="chip">Reproducible</span></div>
+      </div>
+      <div class="proj-media"><canvas id="mwCanvas" role="img" aria-label="Two Bitcoin price feeds locked a stablecoin apart, both legs winning inside the magic window"></canvas></div>
+    </div>
+
+    <div class="proj">
+      <span class="ptag">Aerospace · Industry</span>
+      <h3>Flight Dynamics — PLD Space</h3>
+      <div class="meta">Internship · Mar–Apr &amp; Jun–Aug 2025 · Elche, Spain</div>
+      <p>Flight Dynamics team at Spain's launch-vehicle company. Built MATLAB tools automating recurring flight-dynamics analyses; reworked the finite-difference surface discretization used to compute panel areas, improving the accuracy of pressure-to-force integration on the launch vehicle.</p>
+      <div class="stack"><span class="chip acc">MATLAB</span><span class="chip">Flight Dynamics</span><span class="chip">Numerical Methods</span></div>
+    </div>
+
+    <div class="proj">
+      <span class="ptag">Aerospace · GNC</span>
+      <h3>Powered-Descent Guidance &amp; Control</h3>
+      <div class="meta">MSc Thesis · In Progress · Universidad Europea</div>
+      <p>Real-time trajectory optimization for autonomous rocket landing: the final 2,000 m of powered descent posed as a sequence of convex programs (SOCP) solved in closed loop inside a self-built 3-/6-DoF simulator — the same convex-guidance method family used for SpaceX booster landings.</p>
+      <div class="stack"><span class="chip acc">Convex Optimization</span><span class="chip">SOCP</span><span class="chip">GNC</span><span class="chip">3/6-DoF</span><span class="chip">MATLAB / Python</span></div>
+    </div>
+
+    <div class="proj">
+      <span class="ptag">Control · Research</span>
+      <h3>Multi-Agent Control with Kriging</h3>
+      <div class="meta">BSc Thesis · 9.2/10 · Selected for Docta Complutense (UCM)</div>
+      <p>Multi-agent Bayesian search: coordinated agents locate the maximum of an unknown field via Gaussian-process (Kriging) regression, balancing exploration vs. exploitation under uncertainty. Applied to source localization (oil/mineral prospecting). Selected for Docta Complutense, UCM's distinguished-thesis repository.</p>
+      <div class="stack"><span class="chip acc">Gaussian Processes</span><span class="chip">Bayesian Search</span><span class="chip">Multi-Agent Control</span></div>
+    </div>
+
+    <div class="proj">
+      <span class="ptag">ML · Team Lead</span>
+      <h3>Exoplanet-Detection Neural Network</h3>
+      <div class="meta">NASA Space Apps Challenge · 2025</div>
+      <p>Led a 3-person team building a neural-network exoplanet classifier on NASA telescope data: owned data cleaning and feature selection, defined the train/test methodology and evaluation; delivered a working model in 48 hours.</p>
+      <div class="stack"><span class="chip acc">Machine Learning</span><span class="chip">Data Pipeline</span><span class="chip">Team Lead</span></div>
+    </div>
+
+    <div class="proj">
+      <span class="ptag">Product · Founder</span>
+      <h3>Bolbee — AI Marketing for SMEs</h3>
+      <div class="meta">Co-founder &amp; Sole Developer · 2025–present · <a href="https://app.bolbee.com" target="_blank" style="border-bottom:1px solid var(--line)">app.bolbee.com</a></div>
+      <p>Sole engineer of the full product — Next.js, Supabase/SQL, Stripe, multi-model AI pipeline. Bolbee generates a marketing strategy plus ready-to-publish content for small businesses; 10 active beta users, market launch summer 2026.</p>
+      <div class="stack"><span class="chip acc">TypeScript</span><span class="chip">AI</span><span class="chip">Supabase</span><span class="chip">Vercel</span></div>
+    </div>
+  </section>
+
+  <!-- TOOLKIT -->
+  <section id="toolkit">
+    <div class="sec-label">03 — Toolkit</div>
+    <h2>What I work with.</h2>
+    <div class="skills">
+      <div class="skill-group">
+        <h4>Programming &amp; Scientific Computing</h4>
+        <p>Python (NumPy, pandas — numerical methods, data/eval pipelines) · Rust (trading execution engine) · MATLAB (flight dynamics, simulators) · TypeScript / SQL (Bolbee)</p>
+      </div>
+      <div class="skill-group">
+        <h4>Mathematics</h4>
+        <p>Convex optimization, control theory (multi-agent &amp; GNC), Gaussian processes (Kriging), probability &amp; statistics, numerical optimization, Monte Carlo</p>
+      </div>
+      <div class="skill-group">
+        <h4>Machine Learning</h4>
+        <p>Applied in projects — neural-network exoplanet classifier (data pipeline, train/test design, evaluation), feature-engineering for handwritten-character recognition; currently building depth in statistical learning</p>
+      </div>
+      <div class="skill-group">
+        <h4>Also</h4>
+        <p>Quantum algorithms in Qiskit · Recreational skipper's license (PER, ≤ 24 m) — offshore navigation, charts, seamanship</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="sec-label">04 — Contact</div>
+    <h2>Let's talk.</h2>
+    <p>Available full-time from September 2026. Targeting Quantitative Researcher / Trader roles.</p>
+    <div class="contact-grid">
+      <a href="mailto:alejandrosolergon@gmail.com">Email</a>
+      <a href="tel:+34661668442">+34 661 668 442</a>
+      <a href="https://linkedin.com/" target="_blank">LinkedIn <span class="ph">[url]</span></a>
+      <a href="cv_alejandro.pdf">CV ↓</a>
+    </div>
+  </section>
+
+</div>
+
+<footer><span>Alejandro Soler Gonzálvez — Madrid — 2026</span></footer>
+</div>
+
+<script>
+/* The Magic Window — the two feeds locked a stablecoin apart, both legs winning (loops forever) */
+(function(){
+  var cv=document.getElementById('mwCanvas');if(!cv)return;
+  var AM='#F2A93B',BL='#5B9CFF',GR='#35C97A',DIM='#6A6A72',INK='#EDEFF2';
+  var MONO='ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches, t=0, A=1;
+  function draw(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=cv.clientWidth||420, h=cv.clientHeight||Math.round(w*0.8);
+    cv.width=w*dpr;cv.height=h*dpr;
+    var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#05060a';ctx.fillRect(0,0,w,h);
+    var padL=14,padR=14,padT=32,padB=28, plotH=h-padT-padB, midY=padT+plotH*0.5;
+    var off=plotH*0.17, band=off*1.85; A=plotH*0.055;
+    function w2(i){return Math.sin(i*0.26+t)*A + Math.sin(i*0.10-t*0.55)*A*0.8;}
+    // green magic-window band
+    ctx.fillStyle=GR;ctx.globalAlpha=.09;ctx.fillRect(padL,midY-band,w-padL-padR,band*2);ctx.globalAlpha=1;
+    ctx.strokeStyle=GR;ctx.globalAlpha=.20;ctx.setLineDash([2,4]);ctx.strokeRect(padL,midY-band,w-padL-padR,band*2);ctx.setLineDash([]);ctx.globalAlpha=1;
+    ctx.fillStyle=GR;ctx.globalAlpha=.85;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText('MAGIC WINDOW',padL+6,midY-band+13);ctx.globalAlpha=1;
+    // two parallel feeds, locked an offset apart
+    var N=64;
+    function feed(base,col){ctx.beginPath();for(var i=0;i<=N;i++){var x=padL+i/N*(w-padL-padR);var y=base+w2(i);i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+      ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.stroke();
+      var lx=w-padR,ly=base+w2(N);ctx.beginPath();ctx.arc(lx-1,ly,2.6,0,7);ctx.fillStyle=col;ctx.fill();}
+    feed(midY-off,AM); feed(midY+off,BL);
+    // offset bracket
+    var ax=padL+(w-padL-padR)*0.20, y1=midY-off+w2(N*0.20), y2=midY+off+w2(N*0.20);
+    ctx.strokeStyle=DIM;ctx.globalAlpha=.7;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(ax,y1);ctx.lineTo(ax,y2);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+    ctx.fillStyle=INK;ctx.font='9.5px '+MONO;ctx.textAlign='left';ctx.fillText('≈ offset',ax+6,(y1+y2)/2+3);
+    // labels
+    ctx.fillStyle=AM;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText('BINANCE  BTC/USDT',padL+2,16);
+    ctx.fillStyle=BL;ctx.fillText('INDEX  BTC/USD',padL+2,h-10);
+    ctx.fillStyle=GR;ctx.font='700 11px '+MONO;ctx.textAlign='right';ctx.fillText('$2 · BOTH WIN',w-padR-2,16);
+    // telemetry corner ticks
+    ctx.strokeStyle=DIM;ctx.globalAlpha=.45;ctx.lineWidth=1;var k=8;
+    var cs=[[padL,padT,1,1],[w-padR,padT,-1,1],[padL,h-padB,1,-1],[w-padR,h-padB,-1,-1]];
+    for(var c=0;c<4;c++){var q=cs[c];ctx.beginPath();ctx.moveTo(q[0],q[1]+q[3]*k);ctx.lineTo(q[0],q[1]);ctx.lineTo(q[0]+q[2]*k,q[1]);ctx.stroke();}
+    ctx.globalAlpha=1;
+  }
+  function loop(){t+=0.02;draw();if(!RM)requestAnimationFrame(loop);}
+  if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
+  draw(); if(!RM)requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
