@@ -185,12 +185,19 @@
       <div class="stack"><span class="chip acc">MATLAB</span><span class="chip">Flight Dynamics</span><span class="chip">Numerical Methods</span></div>
     </div>
 
-    <div class="proj">
-      <span class="ptag">Aerospace · GNC</span>
-      <h3>Powered-Descent Guidance &amp; Control</h3>
-      <div class="meta">MSc Thesis · In Progress · Universidad Europea</div>
-      <p>Real-time trajectory optimization for autonomous rocket landing: the final 2,000 m of powered descent posed as a sequence of convex programs (SOCP) solved in closed loop inside a self-built 3-/6-DoF simulator — the same convex-guidance method family used for SpaceX booster landings.</p>
-      <div class="stack"><span class="chip acc">Convex Optimization</span><span class="chip">SOCP</span><span class="chip">GNC</span><span class="chip">3/6-DoF</span><span class="chip">MATLAB / Python</span></div>
+    <div class="proj feat">
+      <div class="proj-body">
+        <span class="ptag">Aerospace · GNC</span>
+        <h3>Powered-Descent Guidance &amp; Control</h3>
+        <div class="meta">MSc Thesis · Space Systems · Universidad Europea</div>
+        <p>Real-time trajectory optimization for autonomous rocket landing — the final 2&nbsp;km of powered descent, the same convex-guidance family behind SpaceX booster landings. The min-fuel problem is <b>non-convex</b> (the engine can't switch off), so I make it convex with <b>lossless convexification</b> and solve the resulting SOCP. Reproduces the Mars-lander benchmark of Malyuta et&nbsp;al. (2022): <b>t_f* = 75 s</b>, exact landing, bang-bang throttle. The interactive demo flies the real solver output.</p>
+        <div class="plinks">
+          <a href="https://iseralx.github.io/powered_descendent/" target="_blank">Interactive demo</a>
+          <a href="https://github.com/ISeralx/powered_descendent" target="_blank">Code &amp; data (GitHub)</a>
+        </div>
+        <div class="stack"><span class="chip acc">Convex Optimization</span><span class="chip">SOCP · LCvx</span><span class="chip">GNC</span><span class="chip">CVXPY · Clarabel</span></div>
+      </div>
+      <div class="proj-media"><canvas id="pdgCanvas" role="img" aria-label="A rocket flying its optimal powered-descent trajectory to the pad with a throttled engine flame"></canvas></div>
     </div>
 
     <div class="proj feat">
@@ -383,6 +390,78 @@
     p=1; var kk,ss; for(kk=0;kk<3;kk++)for(ss=0;ss<=40;ss++){var pr=ss/40;trails[kk].push([A0[kk][0]+(A1[kk][0]-A0[kk][0])*pr,A0[kk][1]+(A1[kk][1]-A0[kk][1])*pr]);}
     var e; for(e=0;e<explored.length;e++)explored[e]=1; draw();
   } else { draw(); requestAnimationFrame(loop); }
+})();
+</script>
+
+<script>
+/* MSc TFM — powered descent. A rocket flies its REAL optimal trajectory to the pad,
+   engine flame throttling bang-bang (full -> min coast -> full touchdown). Loops. */
+(function(){
+  var cv=document.getElementById('pdgCanvas'); if(!cv) return;
+  var AM='#FF8A2A',AM2='#FFB35E',INK='#EDEFF2',DIM='#6A6A72',WHT='#E7E9ED',GR='#37C978';
+  var MONO='ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DR=[1.0,1.112,1.206,1.282,1.339,1.377,1.396,1.396,1.377,1.338,1.28,1.202,1.107,1.001,0.89,0.777,0.664,0.553,0.448,0.35,0.261,0.18,0.109,0.05,0.012,0.0];
+  var AL=[1.0,0.855,0.722,0.601,0.491,0.395,0.311,0.241,0.186,0.145,0.12,0.112,0.122,0.141,0.155,0.165,0.17,0.171,0.166,0.155,0.136,0.108,0.073,0.034,0.009,0.0];
+  var TH=[1,1,1,1,1,1,1,1,1,1,1,1,0.2,0,0,0,0,0,0,0,0,0,0,1,1,1];
+  var N=DR.length-1, DRMAX=1.4, t=0,p=0,hold=0,stars=[];
+  function samp(a,f){var i=Math.floor(f),x=f-i;if(i>=N){i=N;x=0;}return a[Math.min(i,N)]*(1-x)+a[Math.min(i+1,N)]*x;}
+  function draw(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=cv.clientWidth||420,h=cv.clientHeight||Math.round(w*0.74);
+    cv.width=w*dpr;cv.height=h*dpr;var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#05060a';ctx.fillRect(0,0,w,h);
+    if(!stars.length){for(var s=0;s<40;s++)stars.push([Math.random(),Math.random()*0.64,Math.random()*0.4+0.2]);}
+    for(var s2=0;s2<stars.length;s2++){ctx.globalAlpha=stars[s2][2]*0.5;ctx.fillStyle='#cbd0d8';ctx.fillRect(stars[s2][0]*w,stars[s2][1]*h,1.1,1.1);}
+    ctx.globalAlpha=1;
+    var ml=16,mr=16,mt=28,mb=26, iw=w-ml-mr, ih=h-mt-mb;
+    function X(d){return ml+d/DRMAX*iw;} function Y(a){return mt+(1-a)*ih;}
+    var gy=Y(0);
+    ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(w,gy);ctx.stroke();
+    // ghost full path
+    ctx.strokeStyle='rgba(180,184,194,.17)';ctx.setLineDash([2,4]);ctx.lineWidth=1.2;ctx.beginPath();
+    for(var k=0;k<=N;k++){var x=X(DR[k]),y=Y(AL[k]);k?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();ctx.setLineDash([]);
+    var f=p*N;
+    // trail
+    ctx.strokeStyle=AM;ctx.lineWidth=2;ctx.lineCap='round';ctx.beginPath();
+    var steps=Math.max(1,Math.ceil(f));
+    for(var q=0;q<=steps;q++){var ff=Math.min(f,q),xx=X(samp(DR,ff)),yy=Y(samp(AL,ff));q?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();
+    // pad
+    var px=X(0),py=Y(0);
+    ctx.strokeStyle=WHT;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px-11,py);ctx.lineTo(px+11,py);ctx.stroke();
+    ctx.strokeStyle='rgba(255,138,42,.6)';ctx.beginPath();ctx.arc(px,py,4,0,7);ctx.stroke();
+    // rocket
+    var rx=X(samp(DR,f)),ry=Y(samp(AL,f)),thr=samp(TH,f);
+    var f2=Math.min(N,f+0.5),vx=X(samp(DR,f2))-rx;
+    var tilt=Math.max(-0.42,Math.min(0.42,vx*0.02));
+    var landed=p>=0.988;
+    ctx.save();ctx.translate(rx,ry);ctx.rotate(tilt);
+    var fl=6+thr*17+(RM?0:Math.random()*3);
+    var g=ctx.createLinearGradient(0,7,0,7+fl);
+    g.addColorStop(0,'rgba(255,244,190,.95)');g.addColorStop(.4,'rgba(255,138,42,.9)');g.addColorStop(1,'rgba(255,70,30,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(-3.4,7);ctx.lineTo(0,7+fl);ctx.lineTo(3.4,7);ctx.closePath();ctx.fill();
+    ctx.fillStyle=WHT;ctx.strokeStyle='#9296a0';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,-11);ctx.lineTo(4,-3);ctx.lineTo(4,7);ctx.lineTo(-4,7);ctx.lineTo(-4,-3);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#2A2C33';ctx.fillRect(-4,5,8,2.4);
+    ctx.restore();
+    // labels
+    ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText('POWERED DESCENT',ml,15);
+    var ph= landed?'TOUCHDOWN' : (p<0.46?'BRAKING':(thr<0.3?'COAST · MIN':'LANDING BURN'));
+    ctx.fillStyle=landed?GR:AM;ctx.font='700 9px '+MONO;ctx.textAlign='right';ctx.fillText(ph,w-mr,15);
+    ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='right';ctx.fillText('t_f* 75 s · bang-bang · exact landing',w-mr,h-9);
+    // corner ticks
+    ctx.strokeStyle=DIM;ctx.globalAlpha=.4;ctx.lineWidth=1;var kk=7;
+    var cs=[[ml,mt,1,1],[w-mr,mt,-1,1],[ml,h-mb,1,-1],[w-mr,h-mb,-1,-1]];
+    for(var c=0;c<4;c++){var qc=cs[c];ctx.beginPath();ctx.moveTo(qc[0],qc[1]+qc[3]*kk);ctx.lineTo(qc[0],qc[1]);ctx.lineTo(qc[0]+qc[2]*kk,qc[1]);ctx.stroke();}
+    ctx.globalAlpha=1;
+  }
+  function loop(){ t+=0.02;
+    if(hold>0){ hold--; if(hold===0){ p=0; } }
+    else { p+=0.005; if(p>=1){ p=1; hold=70; } }
+    draw(); if(!RM) requestAnimationFrame(loop);
+  }
+  if('ResizeObserver' in window){ new ResizeObserver(function(){draw();}).observe(cv); }
+  if(RM){ p=0.62; draw(); } else { draw(); requestAnimationFrame(loop); }
 })();
 </script>
 </body>
