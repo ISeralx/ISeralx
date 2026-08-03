@@ -97,6 +97,7 @@
   .proj-body{display:grid;gap:8px;min-width:0}
   .proj-media{min-width:0}
   .proj-media canvas{width:100%;aspect-ratio:5/4;display:block;border:1px solid var(--line);background:#05060a}
+  .proj-media.wide canvas{aspect-ratio:16/10}
 
   /* SKILLS */
   .skills{display:grid;grid-template-columns:1fr;gap:30px;margin-top:6px}
@@ -192,15 +193,18 @@
       <div class="stack"><span class="chip acc">Convex Optimization</span><span class="chip">SOCP</span><span class="chip">GNC</span><span class="chip">3/6-DoF</span><span class="chip">MATLAB / Python</span></div>
     </div>
 
-    <div class="proj">
-      <span class="ptag">Control · Research</span>
-      <h3>Multi-Agent Control with Kriging</h3>
-      <div class="meta">BSc Thesis · 9.2/10 · Selected for Docta Complutense (UCM)</div>
-      <p>Multi-agent Bayesian search: coordinated agents locate the maximum of an unknown field via Gaussian-process (Kriging) regression, balancing exploration vs. exploitation under uncertainty. Applied to source localization (contaminant, thermal or radioactive sources; natural deposits). Selected for Docta Complutense, UCM's distinguished-thesis repository.</p>
-      <div class="plinks">
-        <a href="tfg_soler_multiagent_kriging.pdf" target="_blank">Read the thesis (PDF)</a>
+    <div class="proj feat">
+      <div class="proj-body">
+        <span class="ptag">Control · Research</span>
+        <h3>Multi-Agent Control with Kriging</h3>
+        <div class="meta">BSc Thesis · 9.2/10 · Selected for Docta Complutense (UCM)</div>
+        <p>Multi-agent Bayesian search: coordinated agents locate the maximum of an unknown field via Gaussian-process (Kriging) regression, balancing exploration vs. exploitation under uncertainty. Applied to source localization (contaminant, thermal or radioactive sources; natural deposits). Selected for Docta Complutense, UCM's distinguished-thesis repository.</p>
+        <div class="plinks">
+          <a href="tfg_soler_multiagent_kriging.pdf" target="_blank">Read the thesis (PDF)</a>
+        </div>
+        <div class="stack"><span class="chip acc">Gaussian Processes</span><span class="chip">Bayesian Search</span><span class="chip">Multi-Agent Control</span></div>
       </div>
-      <div class="stack"><span class="chip acc">Gaussian Processes</span><span class="chip">Bayesian Search</span><span class="chip">Multi-Agent Control</span></div>
+      <div class="proj-media wide"><canvas id="krigCanvas" role="img" aria-label="Multi-agent swarm locating the maximum of an unknown field with Kriging; left: agents on the real field, right: the estimate forming as they sample"></canvas></div>
     </div>
 
     <div class="proj">
@@ -305,6 +309,79 @@
   function loop(){t+=0.02;draw();if(!RM)requestAnimationFrame(loop);}
   if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
   draw(); if(!RM)requestAnimationFrame(loop);
+})();
+</script>
+
+<script>
+/* TFG — multi-agent Kriging.  LEFT: real field + agents converging on the max.
+   RIGHT: the Kriging estimate forming where the agents sample. Loops forever. */
+(function(){
+  var cv=document.getElementById('krigCanvas'); if(!cv) return;
+  var AM='#F2A93B',BL='#5B9CFF',GR='#35C97A',DIM='#6A6A72',INK='#EDEFF2';
+  var MONO='ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var PK=[[15,15,1.2,10],[40,35,1.0,10],[10,35,1.0,10]], FMAX=1.30;   // 3 gaussianas del TFG
+  function field(x,y){var v=0,i,p,dx,dy;for(i=0;i<3;i++){p=PK[i];dx=x-p[0];dy=y-p[1];v+=p[2]*Math.exp(-(dx*dx+dy*dy)/(2*p[3]*p[3]));}return v;}
+  var A0=[[5,5],[45,5],[25,45]], A1=[[14,18],[14,19],[13,21]], ACOL=[AM,BL,GR];  // inicio -> final reales
+  var G=26, explored=new Float32Array(G*G), trails=[[],[],[]];
+  var stops=[[0,10,16,32],[.35,28,58,110],[.6,43,122,143],[.8,53,201,122],[1,242,169,59]];
+  function col(v){var i,a,b,t;for(i=1;i<stops.length;i++){if(v<=stops[i][0]){a=stops[i-1];b=stops[i];t=(v-a[0])/((b[0]-a[0])||1);return [a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t,a[3]+(b[3]-a[3])*t];}}return [242,169,59];}
+  var t=0,p=0,hold=0;
+  function agentPos(k,pe){var wob=(1-pe)*(6*Math.sin(t*1.3+k*2)+4*Math.cos(t*0.7+k*1.7));
+    return [A0[k][0]+(A1[k][0]-A0[k][0])*pe+wob, A0[k][1]+(A1[k][1]-A0[k][1])*pe+wob*Math.cos(k+1)];}
+  function draw(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=cv.clientWidth||520, h=cv.clientHeight||Math.round(w*0.625);
+    cv.width=w*dpr;cv.height=h*dpr;var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#05060a';ctx.fillRect(0,0,w,h);
+    var pad=10,gap=12,top=20,bot=8, pw=(w-2*pad-gap)/2, ph=h-top-bot;
+    var PX=[pad, pad+pw+gap], LAB=['REAL FIELD · AGENTS','KRIGING ESTIMATE'];
+    var pe=p*p*(3-2*p), k;
+    var ag=[]; for(k=0;k<3;k++) ag.push(agentPos(k,pe));
+    for(k=0;k<3;k++){
+      trails[k].push(ag[k]); if(trails[k].length>70) trails[k].shift();
+      var gx=Math.round(ag[k][0]/50*(G-1)), gy=Math.round(ag[k][1]/50*(G-1)),xx,yy,X,Y,d;
+      for(yy=-3;yy<=3;yy++)for(xx=-3;xx<=3;xx++){X=gx+xx;Y=gy+yy;if(X<0||Y<0||X>=G||Y>=G)continue;d=xx*xx+yy*yy;explored[Y*G+X]=Math.min(1,explored[Y*G+X]+0.05*Math.exp(-d/4));}
+    }
+    function toPx(pi,fx,fy){return [PX[pi]+fx/50*pw, top+(1-fy/50)*ph];}
+    function drawField(pi,est){var cw=pw/G,chh=ph/G,gx,gy,fx,fy,v,rv,c;
+      for(gy=0;gy<G;gy++)for(gx=0;gx<G;gx++){
+        fx=gx/(G-1)*50; fy=gy/(G-1)*50; v=field(fx,fy)/FMAX; rv=est? v*Math.min(1,explored[gy*G+gx]) : v;
+        if(rv<0.02)continue; c=col(rv<1?rv:1); ctx.globalAlpha=Math.min(1,0.10+rv*1.1);
+        ctx.fillStyle='rgb('+(c[0]|0)+','+(c[1]|0)+','+(c[2]|0)+')';
+        ctx.fillRect(PX[pi]+gx*cw, top+(G-1-gy)*chh, cw+0.7, chh+0.7);
+      } ctx.globalAlpha=1;
+    }
+    drawField(0,false); drawField(1,true);
+    // agentes + estelas (solo panel izq)
+    for(k=0;k<3;k++){
+      var tr=trails[k],s,q; ctx.strokeStyle=ACOL[k];ctx.globalAlpha=.4;ctx.lineWidth=1;ctx.beginPath();
+      for(s=0;s<tr.length;s++){q=toPx(0,tr[s][0],tr[s][1]); s?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);}
+      ctx.stroke();ctx.globalAlpha=1;
+      var a=toPx(0,ag[k][0],ag[k][1]); ctx.beginPath();ctx.arc(a[0],a[1],2.7,0,7);ctx.fillStyle=ACOL[k];ctx.fill();
+      ctx.strokeStyle='#05060a';ctx.lineWidth=1.4;ctx.stroke();
+    }
+    // cruz del maximo estimado (panel der): vaga al principio y se clava en el max real
+    var mx=14.3+(1-pe)*Math.sin(t*0.9)*7, my=18.6+(1-pe)*Math.cos(t*1.1)*7, m=toPx(1,mx,my);
+    ctx.strokeStyle=INK;ctx.globalAlpha=.5+.5*pe;ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(m[0]-4,m[1]);ctx.lineTo(m[0]+4,m[1]);ctx.moveTo(m[0],m[1]-4);ctx.lineTo(m[0],m[1]+4);ctx.stroke();ctx.globalAlpha=1;
+    // marcos + labels + readout
+    for(var pi=0;pi<2;pi++){ctx.strokeStyle='rgba(255,255,255,.10)';ctx.lineWidth=1;ctx.strokeRect(PX[pi],top,pw,ph);
+      ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText(LAB[pi],PX[pi]+1,14);}
+    var iter=Math.round(pe*79), err=(1-pe)*38+Math.abs(Math.sin(t))*0.25;
+    ctx.textAlign='right';ctx.font='700 10px '+MONO;ctx.fillStyle=pe>0.985?GR:INK;
+    ctx.fillText(pe>0.985?'MAX FOUND · φ*≈1.37':('iter '+iter+' · err '+err.toFixed(1)+' ↓'), w-2, 14);
+  }
+  function loop(){ t+=0.02;
+    if(hold>0){ hold--; if(hold===0){ p=0; explored=new Float32Array(G*G); trails=[[],[],[]]; } }
+    else { p+=0.0017; if(p>=1){ p=1; hold=90; } }
+    draw(); if(!RM) requestAnimationFrame(loop);
+  }
+  if('ResizeObserver' in window){ new ResizeObserver(function(){draw();}).observe(cv); }
+  if(RM){ // frame estatico convergido
+    p=1; var kk,ss; for(kk=0;kk<3;kk++)for(ss=0;ss<=40;ss++){var pr=ss/40;trails[kk].push([A0[kk][0]+(A1[kk][0]-A0[kk][0])*pr,A0[kk][1]+(A1[kk][1]-A0[kk][1])*pr]);}
+    var e; for(e=0;e<explored.length;e++)explored[e]=1; draw();
+  } else { draw(); requestAnimationFrame(loop); }
 })();
 </script>
 </body>
