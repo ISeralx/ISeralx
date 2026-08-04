@@ -103,7 +103,15 @@
   .proj-media{min-width:0}
   .proj-media canvas{width:100%;aspect-ratio:5/4;display:block;border:1px solid var(--line);background:#05060a}
   .proj-media.wide canvas{aspect-ratio:16/10}
-  .proj-media video{width:100%;aspect-ratio:1/1;display:block;border:1px solid var(--line);background:#05060a;object-fit:cover}
+  .proj-media.bolbee-media{position:relative;aspect-ratio:4/3;border:1px solid var(--line);background:#05060a;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .bolbee-glow{position:absolute;width:80%;height:80%;border-radius:50%;filter:blur(28px);
+    background:radial-gradient(circle,rgba(255,150,90,.20),rgba(150,90,230,.14) 45%,transparent 70%);
+    animation:bolbeeGlow 6.5s ease-in-out infinite}
+  .bolbee-mascot{position:relative;z-index:1;max-width:92%;max-height:90%;width:auto;height:auto;object-fit:contain;
+    animation:bolbeeFloat 6s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 14px 32px rgba(0,0,0,.5))}
+  @keyframes bolbeeFloat{0%,100%{transform:translateY(-3%) rotate(-1deg)}50%{transform:translateY(3%) rotate(1deg)}}
+  @keyframes bolbeeGlow{0%,100%{opacity:.5;transform:scale(.94)}50%{opacity:1;transform:scale(1.07)}}
+  @media(prefers-reduced-motion:reduce){.bolbee-mascot,.bolbee-glow{animation:none}}
 
   /* SKILLS */
   .skills{display:grid;grid-template-columns:1fr;gap:30px;margin-top:6px}
@@ -252,7 +260,7 @@
         <div class="plinks"><a href="https://bolbee.com" target="_blank">Visit Bolbee</a></div>
         <div class="stack"><span class="chip acc">TypeScript</span><span class="chip">AI</span><span class="chip">Supabase</span><span class="chip">Vercel</span></div>
       </div>
-      <div class="proj-media"><video autoplay loop muted playsinline poster="bolbee_dark.jpg" aria-label="Bolbee brand mascot animation"><source src="bolbee_dark.mp4" type="video/mp4"></video></div>
+      <div class="proj-media bolbee-media"><div class="bolbee-glow"></div><img src="bolbee_mascot.png" alt="Bolbee mascot presenting a web page" class="bolbee-mascot"></div>
     </div>
   </section>
 
