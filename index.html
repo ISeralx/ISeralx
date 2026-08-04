@@ -72,6 +72,9 @@
   .about p b{color:#fff;font-weight:600}
   .langs{margin-top:30px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
   .langs b{color:#fff;font-weight:500}
+  .about-grid{display:grid;gap:40px;align-items:center}
+  @media(min-width:860px){.about-grid{grid-template-columns:1.5fr 1fr;gap:52px}}
+  .about-media canvas{width:100%;aspect-ratio:4/5;display:block;border:1px solid var(--line);background:#05060a}
 
   /* PROJECTS */
   .proj{border-top:1px solid var(--line);padding:34px 0;display:grid;gap:8px;transition:padding-left .25s}
@@ -98,7 +101,7 @@
   .proj-media{min-width:0}
   .proj-media canvas{width:100%;aspect-ratio:5/4;display:block;border:1px solid var(--line);background:#05060a}
   .proj-media.wide canvas{aspect-ratio:16/10}
-  .proj-media video{width:100%;aspect-ratio:16/9;display:block;border:1px solid var(--line);background:#fff;object-fit:cover}
+  .proj-media video{width:100%;aspect-ratio:1/1;display:block;border:1px solid var(--line);background:#05060a;object-fit:cover}
 
   /* SKILLS */
   .skills{display:grid;grid-template-columns:1fr;gap:30px;margin-top:6px}
@@ -149,12 +152,17 @@
 
   <!-- ABOUT -->
   <section class="about">
-    <div class="sec-label">01 — The Throughline</div>
-    <h2>Theory and<br>practice, fused.</h2>
-    <p>I got obsessed with the <b>P vs NP problem at 14</b> — not because I was going to solve it, but because attacking the impossible with pure reasoning never stopped being the thing I love most.</p>
-    <p>The pattern has held across every domain since: take a hard, open-ended problem, build the model, and <b>actually deploy it</b> where it has to work. Convex optimization to land a rocket. Multi-agent control to find what's hidden underground. A cross-venue execution engine trading my own capital on prediction markets. AI tools real businesses can use.</p>
-    <p>Scientific rigor, real deployment, and markets — that intersection <b>is</b> quantitative research. It's where I want to point everything I have, at the highest level.</p>
-    <div class="langs">Languages — <b>Spanish</b> Native · <b>English</b> C1 (Cambridge certified) · <b>Catalan</b> C1</div>
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="sec-label">01 — The Throughline</div>
+        <h2>Theory and<br>practice, fused.</h2>
+        <p>I got obsessed with the <b>P vs NP problem at 14</b> — not because I was going to solve it, but because attacking the impossible with pure reasoning never stopped being the thing I love most.</p>
+        <p>The pattern has held across every domain since: take a hard, open-ended problem, build the model, and <b>actually deploy it</b> where it has to work. Convex optimization to land a rocket. Multi-agent control to find what's hidden underground. A cross-venue execution engine trading my own capital on prediction markets. AI tools real businesses can use.</p>
+        <p>Scientific rigor, real deployment, and markets — that intersection <b>is</b> quantitative research. It's where I want to point everything I have, at the highest level.</p>
+        <div class="langs">Languages — <b>Spanish</b> Native · <b>English</b> C1 (Cambridge certified) · <b>Catalan</b> C1</div>
+      </div>
+      <div class="about-media"><canvas id="pnpCanvas" role="img" aria-label="The P versus NP problem: a brute-force search tree explodes exponentially while a single certificate path is verified in polynomial time"></canvas></div>
+    </div>
   </section>
 
   <!-- WORK -->
@@ -604,6 +612,44 @@
   function loop(){t+=0.02;draw();if(!RM)requestAnimationFrame(loop);}
   if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
   draw(); if(!RM)requestAnimationFrame(loop);
+})();
+</script>
+
+<script>
+/* P vs NP — the problem he fell for at 14. A brute-force search tree explodes exponentially
+   (dead ends, red), while a single certificate path is verified in polynomial time (green). Loops. */
+(function(){
+  var cv=document.getElementById('pnpCanvas'); if(!cv) return;
+  var GR='#35C97A',RED='#FF6B6B',DIM='#6A6A72',INK='#EDEFF2';
+  var MONO='ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var D=6, solLeaf=45%(1<<D), path=[];
+  (function(){var idx=solLeaf; for(var l=D;l>=0;l--){ path[l]=idx; idx=idx>>1; }})();
+  var reveal=0, hold=0;
+  function draw(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=cv.clientWidth||360,h=cv.clientHeight||Math.round(w*1.25);
+    cv.width=w*dpr;cv.height=h*dpr;var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#05060a';ctx.fillRect(0,0,w,h);
+    var top=h*0.22, bot=h*0.84, ml=14, iw=w-ml*2;
+    function px(l,i){return ml+(i+0.5)/(1<<l)*iw;}
+    function py(l){return top+(l/D)*(bot-top);}
+    var rl=Math.min(D,reveal), fl=Math.floor(rl);
+    for(var l=1;l<=fl;l++){for(var i=0;i<(1<<l);i++){var on=path[l]===i;
+      ctx.strokeStyle=on?GR:'rgba(120,124,134,.20)';ctx.lineWidth=on?2:1;
+      ctx.beginPath();ctx.moveTo(px(l-1,i>>1),py(l-1));ctx.lineTo(px(l,i),py(l));ctx.stroke();}}
+    for(var l=0;l<=fl;l++){for(var i=0;i<(1<<l);i++){var on=path[l]===i,leaf=(l===D);
+      ctx.fillStyle=on?GR:(leaf?'rgba(255,107,107,.65)':'rgba(150,156,170,.5)');
+      ctx.beginPath();ctx.arc(px(l,i),py(l),on?3.4:(leaf?1.8:2.4),0,7);ctx.fill();}}
+    ctx.textAlign='left';ctx.font='700 13px '+MONO;ctx.fillStyle=INK;ctx.fillText('P ≟ NP',ml,20);
+    ctx.font='9px '+MONO;ctx.fillStyle=RED;ctx.fillText('brute force   2^'+fl+' = '+(1<<fl),ml,h-22);
+    var full=rl>=D-0.001;ctx.fillStyle=full?GR:DIM;
+    ctx.fillText('verify a guess   O(n) '+(full?'✓':''),ml,h-9);
+  }
+  function loop(){ if(hold>0){hold--;if(hold<=0)reveal=0;} else{reveal+=0.045;if(reveal>=D){reveal=D;hold=115;}}
+    draw(); if(!RM)requestAnimationFrame(loop);}
+  if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
+  if(RM){reveal=D;draw();} else {draw();requestAnimationFrame(loop);}
 })();
 </script>
 </body>
