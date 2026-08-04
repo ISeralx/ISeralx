@@ -43,7 +43,9 @@
   @media(max-width:620px){nav .links{display:none}}
 
   /* HERO */
-  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 70px}
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 70px;position:relative;overflow:hidden}
+  #heroBg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.7}
+  .hero-inner{position:relative;z-index:1}
   .kicker{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);margin-bottom:30px}
   .hero h1{font-family:"Barlow Semi Condensed",sans-serif;font-weight:700;text-transform:uppercase;
     font-size:clamp(52px,12vw,128px);line-height:.92;letter-spacing:.01em;margin-bottom:26px}
@@ -138,15 +140,18 @@
 
   <!-- HERO -->
   <header class="hero">
-    <div class="kicker">Physicist · Quantitative Research · Engineering</div>
-    <h1>Alejandro<br>Soler</h1>
-    <p class="statement">I turn hard mathematics into <b>systems that ship.</b></p>
-    <p class="lede">Physicist and aerospace systems engineer. I take rigorous optimization and machine learning and deploy them — from spacecraft powered-descent guidance to a cross-venue execution engine trading real capital on prediction markets.</p>
-    <p class="now"><b>Currently</b> — MSc thesis on rocket-landing GNC · building Bolbee, an AI product for SMEs · preparing for quantitative research roles.</p>
-    <div class="cta">
-      <a class="btn solid" href="cv_alejandro.pdf">Download CV</a>
-      <a class="btn" href="#work">Selected Work</a>
-      <a class="btn" href="https://linkedin.com/" target="_blank">LinkedIn <span class="ph">[url]</span></a>
+    <canvas id="heroBg" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <div class="kicker">Physicist · Quantitative Research · Engineering</div>
+      <h1>Alejandro<br>Soler</h1>
+      <p class="statement">I turn hard mathematics into <b>systems that ship.</b></p>
+      <p class="lede">Physicist and aerospace systems engineer. I take rigorous optimization and machine learning and deploy them — from spacecraft powered-descent guidance to a cross-venue execution engine trading real capital on prediction markets.</p>
+      <p class="now"><b>Currently</b> — MSc thesis on rocket-landing GNC · building Bolbee, an AI product for SMEs · preparing for quantitative research roles.</p>
+      <div class="cta">
+        <a class="btn solid" href="cv_alejandro.pdf">Download CV</a>
+        <a class="btn" href="#work">Selected Work</a>
+        <a class="btn" href="https://linkedin.com/" target="_blank">LinkedIn <span class="ph">[url]</span></a>
+      </div>
     </div>
   </header>
 
@@ -177,8 +182,8 @@
         <div class="meta">Independent · Feb–May 2026 · Rust · Research note 2026</div>
         <p>Found a predictable settlement gap between <b>Polymarket and Kalshi</b> on hourly Bitcoin: the disagreement between their two price oracles is the <b>USDT/USD stablecoin basis</b> — signed, and forecastable before the hour resolves. Built a Rust execution engine to trade it, on AWS eu-west-1 (Ireland) for proximity to the venues; wound it down when Spain banned both. Wrote it up as a <b>public research note</b> — the mechanism validated on 1,350 real Kalshi settlements, and deliberately honest about what it does and does not prove.</p>
         <div class="plinks">
-          <a href="the-magic-window.pdf" target="_blank">Read the note (PDF)</a>
           <a href="https://iseralx.github.io/magic-window/" target="_blank">Interactive explainer</a>
+          <a href="the-magic-window.pdf" target="_blank">Read the note (PDF)</a>
           <a href="https://github.com/ISeralx/magic-window" target="_blank">Code &amp; data (GitHub)</a>
         </div>
         <div class="stack"><span class="chip acc">Rust</span><span class="chip">Market Microstructure</span><span class="chip">Stablecoin Basis</span><span class="chip">AWS</span><span class="chip">Reproducible</span></div>
@@ -247,7 +252,7 @@
         <div class="plinks"><a href="https://bolbee.com" target="_blank">Visit Bolbee</a></div>
         <div class="stack"><span class="chip acc">TypeScript</span><span class="chip">AI</span><span class="chip">Supabase</span><span class="chip">Vercel</span></div>
       </div>
-      <div class="proj-media"><video autoplay loop muted playsinline poster="bolbee_poster.jpg" aria-label="Bolbee brand mascot animation"><source src="bolbee.mp4" type="video/mp4"></video></div>
+      <div class="proj-media"><video autoplay loop muted playsinline poster="bolbee_dark.jpg" aria-label="Bolbee brand mascot animation"><source src="bolbee_dark.mp4" type="video/mp4"></video></div>
     </div>
   </section>
 
@@ -650,6 +655,30 @@
     draw(); if(!RM)requestAnimationFrame(loop);}
   if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
   if(RM){reveal=D;draw();} else {draw();requestAnimationFrame(loop);}
+})();
+</script>
+
+<script>
+/* hero ambient — a faint drifting constellation behind the name. Deliberately subtle. */
+(function(){
+  var cv=document.getElementById('heroBg'); if(!cv) return;
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pts=[],W=0,H=0,dpr=1;
+  function size(){var r=cv.getBoundingClientRect();W=r.width;H=r.height;dpr=Math.min(window.devicePixelRatio||1,2);
+    cv.width=Math.max(1,W*dpr);cv.height=Math.max(1,H*dpr);
+    var n=Math.round(Math.min(56,W*H/22000));pts=[];
+    for(var i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*0.16,vy:(Math.random()-.5)*0.16});}
+  function draw(){var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+    for(var i=0;i<pts.length;i++){var p=pts[i];p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x+=W;if(p.x>W)p.x-=W;if(p.y<0)p.y+=H;if(p.y>H)p.y-=H;}
+    for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){
+      var a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.strokeStyle='rgba(150,170,205,'+(0.09*(1-d/120))+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+    ctx.fillStyle='rgba(180,195,220,.30)';
+    for(var i=0;i<pts.length;i++){ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,1.1,0,7);ctx.fill();}}
+  function loop(){draw();if(!RM)requestAnimationFrame(loop);}
+  size(); if('ResizeObserver' in window)new ResizeObserver(size).observe(cv);
+  if(RM)draw(); else loop();
 })();
 </script>
 </body>
