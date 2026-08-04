@@ -98,6 +98,7 @@
   .proj-media{min-width:0}
   .proj-media canvas{width:100%;aspect-ratio:5/4;display:block;border:1px solid var(--line);background:#05060a}
   .proj-media.wide canvas{aspect-ratio:16/10}
+  .proj-media video{width:100%;aspect-ratio:16/9;display:block;border:1px solid var(--line);background:#fff;object-fit:cover}
 
   /* SKILLS */
   .skills{display:grid;grid-template-columns:1fr;gap:30px;margin-top:6px}
@@ -177,12 +178,15 @@
       <div class="proj-media"><canvas id="mwCanvas" role="img" aria-label="Two Bitcoin price feeds locked a stablecoin apart, both legs winning inside the magic window"></canvas></div>
     </div>
 
-    <div class="proj">
-      <span class="ptag">Aerospace · Industry</span>
-      <h3>Flight Dynamics — PLD Space</h3>
-      <div class="meta">Internship · Mar–Apr &amp; Jun–Aug 2025 · Elche, Spain</div>
-      <p>Flight Dynamics team at Spain's launch-vehicle company. Built MATLAB tools automating recurring flight-dynamics analyses; reworked the finite-difference surface discretization used to compute panel areas, improving the accuracy of pressure-to-force integration on the launch vehicle.</p>
-      <div class="stack"><span class="chip acc">MATLAB</span><span class="chip">Flight Dynamics</span><span class="chip">Numerical Methods</span></div>
+    <div class="proj feat">
+      <div class="proj-body">
+        <span class="ptag">Aerospace · Industry</span>
+        <h3>Flight Dynamics — PLD Space</h3>
+        <div class="meta">Internship · Mar–Apr &amp; Jun–Aug 2025 · Elche, Spain</div>
+        <p>Flight Dynamics team at Spain's launch-vehicle company. Built MATLAB tools automating recurring flight-dynamics analyses; reworked the finite-difference surface discretization used to compute panel areas, improving the accuracy of pressure-to-force integration on the launch vehicle.</p>
+        <div class="stack"><span class="chip acc">MATLAB</span><span class="chip">Flight Dynamics</span><span class="chip">Numerical Methods</span></div>
+      </div>
+      <div class="proj-media"><canvas id="pldCanvas" role="img" aria-label="Schematic panel method: a generic launch vehicle surface discretized into panels, a pressure field versus angle of attack, and the integrated aerodynamic force. Illustrative only, no proprietary data."></canvas></div>
     </div>
 
     <div class="proj feat">
@@ -215,20 +219,27 @@
       <div class="proj-media wide"><canvas id="krigCanvas" role="img" aria-label="Multi-agent swarm locating the maximum of an unknown field with Kriging; left: agents on the real field, right: the estimate forming as they sample"></canvas></div>
     </div>
 
-    <div class="proj">
-      <span class="ptag">ML · Team Lead</span>
-      <h3>Exoplanet-Detection Neural Network</h3>
-      <div class="meta">NASA Space Apps Challenge · 2025</div>
-      <p>Led a 3-person team building a neural-network exoplanet classifier on NASA telescope data: owned data cleaning and feature selection, defined the train/test methodology and evaluation; delivered a working model in 48 hours.</p>
-      <div class="stack"><span class="chip acc">Machine Learning</span><span class="chip">Data Pipeline</span><span class="chip">Team Lead</span></div>
+    <div class="proj feat">
+      <div class="proj-body">
+        <span class="ptag">ML · Team Lead</span>
+        <h3>Exoplanet-Detection Neural Network</h3>
+        <div class="meta">NASA Space Apps Challenge · 2025</div>
+        <p>Led a 3-person team building a neural-network exoplanet classifier on NASA telescope data: owned data cleaning and feature selection, defined the train/test methodology and evaluation; delivered a working model in 48 hours.</p>
+        <div class="stack"><span class="chip acc">Machine Learning</span><span class="chip">Data Pipeline</span><span class="chip">Team Lead</span></div>
+      </div>
+      <div class="proj-media wide"><canvas id="exoCanvas" role="img" aria-label="A planet transiting its star dims the measured light; a neural network reads the light curve and flags an exoplanet detection"></canvas></div>
     </div>
 
-    <div class="proj">
-      <span class="ptag">Product · Founder</span>
-      <h3>Bolbee — AI Marketing for SMEs</h3>
-      <div class="meta">Co-founder &amp; Sole Developer · 2025–present · <a href="https://app.bolbee.com" target="_blank" style="border-bottom:1px solid var(--line)">app.bolbee.com</a></div>
-      <p>Sole engineer of the full product — Next.js, Supabase/SQL, Stripe, multi-model AI pipeline. Bolbee generates a marketing strategy plus ready-to-publish content for small businesses; 10 active beta users, market launch summer 2026.</p>
-      <div class="stack"><span class="chip acc">TypeScript</span><span class="chip">AI</span><span class="chip">Supabase</span><span class="chip">Vercel</span></div>
+    <div class="proj feat">
+      <div class="proj-body">
+        <span class="ptag">Product · Founder</span>
+        <h3>Bolbee — AI Marketing for SMEs</h3>
+        <div class="meta">Co-founder &amp; Sole Developer · 2025–present · <a href="https://bolbee.com" target="_blank" style="border-bottom:1px solid var(--line)">bolbee.com</a></div>
+        <p>Sole engineer of the full product — Next.js, Supabase/SQL, Stripe, multi-model AI pipeline. Bolbee generates a marketing strategy plus ready-to-publish content for small businesses; 10 active beta users, market launch summer 2026.</p>
+        <div class="plinks"><a href="https://bolbee.com" target="_blank">Visit Bolbee</a></div>
+        <div class="stack"><span class="chip acc">TypeScript</span><span class="chip">AI</span><span class="chip">Supabase</span><span class="chip">Vercel</span></div>
+      </div>
+      <div class="proj-media"><video autoplay loop muted playsinline poster="bolbee_poster.jpg" aria-label="Bolbee brand mascot animation"><source src="bolbee.mp4" type="video/mp4"></video></div>
     </div>
   </section>
 
@@ -472,6 +483,127 @@
   }
   if('ResizeObserver' in window){ new ResizeObserver(function(){draw();}).observe(cv); }
   if(RM){ p=0.6; draw(); } else { draw(); requestAnimationFrame(loop); }
+})();
+</script>
+
+<script>
+/* PLD Space — schematic PANEL METHOD. A generic launch vehicle, surface discretised into
+   panels; Newtonian pressure field vs angle of attack; the integrated aerodynamic force.
+   Illustrative only, no proprietary data. Loops. */
+(function(){
+  var cv=document.getElementById('pldCanvas'); if(!cv) return;
+  var AM='#F2A93B',INK='#EDEFF2',DIM='#6A6A72';
+  var MONO='ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches, t=0;
+  function rad(s){ if(s<0.62) return 1; if(s>1) return 0; var u=(s-0.62)/0.38; return Math.sqrt(Math.max(0,1-u*u)); }
+  function press(nx,ny,vx,vy){ var d=-(nx*vx+ny*vy); return d>0? 2*d*d : 0; }
+  function cmap(c){ c=Math.max(0,Math.min(1,c));
+    var a=[91,156,255],b=[242,169,59],e=[255,90,60],r,g,bl,tt;
+    if(c<0.5){tt=c/0.5;r=a[0]+(b[0]-a[0])*tt;g=a[1]+(b[1]-a[1])*tt;bl=a[2]+(b[2]-a[2])*tt;}
+    else{tt=(c-0.5)/0.5;r=b[0]+(e[0]-b[0])*tt;g=b[1]+(e[1]-b[1])*tt;bl=b[2]+(e[2]-b[2])*tt;}
+    return 'rgb('+(r|0)+','+(g|0)+','+(bl|0)+')'; }
+  function draw(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=cv.clientWidth||420,h=cv.clientHeight||Math.round(w*0.8);
+    cv.width=w*dpr;cv.height=h*dpr;var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#05060a';ctx.fillRect(0,0,w,h);
+    var cx=w*0.5, top=h*0.14, bot=h*0.88, H=bot-top, R=Math.min(w*0.13,H*0.11);
+    var alpha=0.30*Math.sin(t*0.7), vx=Math.sin(alpha), vy=Math.cos(alpha);
+    ctx.strokeStyle='rgba(120,140,170,.12)';ctx.lineWidth=1;
+    for(var k=-4;k<=4;k++){var o=k*R*1.5;ctx.beginPath();ctx.moveTo(cx+o-vx*h,h*0.5-vy*h);ctx.lineTo(cx+o+vx*h,h*0.5+vy*h);ctx.stroke();}
+    var Ns=24, panels=[];
+    function pt(s,side){var r=rad(s)*R;return [cx+side*r, bot-s*H];}
+    for(var side=-1;side<=1;side+=2){for(var i=0;i<Ns;i++){
+      var p0=pt(i/Ns,side),p1=pt((i+1)/Ns,side);
+      var mx=(p0[0]+p1[0])/2,my=(p0[1]+p1[1])/2,tx=p1[0]-p0[0],ty=p1[1]-p0[1],tl=Math.hypot(tx,ty)||1;
+      var nx=ty/tl,ny=-tx/tl; if((mx-cx)*nx<0){nx=-nx;ny=-ny;}
+      panels.push({mx:mx,my:my,nx:nx,ny:ny,Cp:press(nx,ny,vx,vy),p0:p0,p1:p1});}}
+    ctx.beginPath();
+    for(var i=0;i<=Ns;i++){var p=pt(i/Ns,-1);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}
+    for(var i=Ns;i>=0;i--){var p=pt(i/Ns,1);ctx.lineTo(p[0],p[1]);}
+    ctx.closePath();ctx.fillStyle='#0d0f14';ctx.fill();
+    ctx.strokeStyle='rgba(160,168,184,.4)';ctx.lineWidth=1;
+    for(var side=-1;side<=1;side+=2){ctx.beginPath();ctx.moveTo(cx+side*R,bot-H*0.02);ctx.lineTo(cx+side*R*2.1,bot);ctx.lineTo(cx+side*R,bot-H*0.13);ctx.closePath();ctx.fillStyle='#0d0f14';ctx.fill();ctx.stroke();}
+    var Fx=0,Fy=0,cpx=0,cpy=0,cw=0;
+    for(var i=0;i<panels.length;i++){var P=panels[i];
+      ctx.strokeStyle=cmap(P.Cp/2);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(P.p0[0],P.p0[1]);ctx.lineTo(P.p1[0],P.p1[1]);ctx.stroke();
+      if(P.Cp>0.05){var L=4+P.Cp*13;ctx.globalAlpha=.65;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(P.mx+P.nx*L,P.my+P.ny*L);ctx.lineTo(P.mx,P.my);ctx.stroke();ctx.globalAlpha=1;
+        Fx-=P.nx*P.Cp;Fy-=P.ny*P.Cp;cpx+=P.mx*P.Cp;cpy+=P.my*P.Cp;cw+=P.Cp;}}
+    if(cw>0){cpx/=cw;cpy/=cw;var fl=Math.hypot(Fx,Fy)||1,kk=28/fl,ang=Math.atan2(Fy,Fx);
+      ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cpx,cpy);ctx.lineTo(cpx+Fx*kk,cpy+Fy*kk);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cpx+Fx*kk,cpy+Fy*kk);ctx.lineTo(cpx+Fx*kk-6*Math.cos(ang-0.4),cpy+Fy*kk-6*Math.sin(ang-0.4));
+      ctx.moveTo(cpx+Fx*kk,cpy+Fy*kk);ctx.lineTo(cpx+Fx*kk-6*Math.cos(ang+0.4),cpy+Fy*kk-6*Math.sin(ang+0.4));ctx.stroke();
+      ctx.fillStyle=INK;ctx.beginPath();ctx.arc(cpx,cpy,2.5,0,7);ctx.fill();}
+    ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText('PANEL METHOD · SURFACE DISCRETISATION',10,15);
+    ctx.textAlign='right';ctx.fillStyle=INK;ctx.fillText('∮ p n dA → F',w-10,15);
+    ctx.fillStyle=AM;ctx.textAlign='right';ctx.fillText('α = '+(alpha*57.3).toFixed(1)+'°',w-10,h-9);
+    ctx.fillStyle=DIM;ctx.textAlign='left';ctx.fillText('illustrative · no proprietary data',10,h-9);
+  }
+  function loop(){t+=0.02;draw();if(!RM)requestAnimationFrame(loop);}
+  if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
+  draw(); if(!RM)requestAnimationFrame(loop);
+})();
+</script>
+
+<script>
+/* NASA Space Apps — exoplanet transit + NN classifier. LEFT: a planet transits its star,
+   dimming the light. RIGHT: the light curve; a neural net reads it and flags a detection. Loops. */
+(function(){
+  var cv=document.getElementById('exoCanvas'); if(!cv) return;
+  var AM='#F2A93B',BL='#5B9CFF',GR='#35C97A',DIM='#6A6A72',INK='#EDEFF2';
+  var MONO='ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var RM=matchMedia('(prefers-reduced-motion: reduce)').matches, t=0;
+  var Rp=0.16, bimp=0.32;
+  function flux(x){var d=Math.hypot(x,bimp),depth=Rp*Rp;
+    if(d>=1+Rp)return 1; if(d<=1-Rp)return 1-depth;
+    return 1-depth*Math.max(0,Math.min(1,(1+Rp-d)/(2*Rp)));}
+  function nz(i){var s=Math.sin(i*12.9898)*43758.5453;return (s-Math.floor(s))-0.5;}
+  function draw(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=cv.clientWidth||520,h=cv.clientHeight||Math.round(w*0.625);
+    cv.width=w*dpr;cv.height=h*dpr;var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#05060a';ctx.fillRect(0,0,w,h);
+    var pad=10,gap=14,topM=18,botM=14,pw=(w-2*pad-gap)*0.44,pw2=(w-2*pad-gap)*0.56,ph=h-topM-botM;
+    var LX=pad,RX=pad+pw+gap;
+    var period=6.0, ph01=(t%period)/period, px=ph01*3-1.5;
+    var scx=LX+pw*0.5,scy=topM+ph*0.5,Rs=Math.min(pw,ph)*0.32;
+    for(var i=0;i<26;i++){var sx=LX+((i*97)%1000)/1000*pw,sy=topM+((i*61)%1000)/1000*ph;ctx.globalAlpha=.3;ctx.fillStyle='#c9ccd2';ctx.fillRect(sx,sy,1,1);}
+    ctx.globalAlpha=1;
+    var g=ctx.createRadialGradient(scx,scy,Rs*0.2,scx,scy,Rs*1.5);
+    g.addColorStop(0,'rgba(255,205,120,.35)');g.addColorStop(1,'rgba(255,205,120,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(scx,scy,Rs*1.5,0,7);ctx.fill();
+    var g2=ctx.createRadialGradient(scx-Rs*0.25,scy-Rs*0.25,Rs*0.1,scx,scy,Rs);
+    g2.addColorStop(0,'#FFE9A8');g2.addColorStop(.7,'#FFC65A');g2.addColorStop(1,'#E8933A');
+    ctx.fillStyle=g2;ctx.beginPath();ctx.arc(scx,scy,Rs,0,7);ctx.fill();
+    var ppx=scx+px*Rs,ppy=scy+bimp*Rs;
+    ctx.fillStyle='#0a0b0f';ctx.beginPath();ctx.arc(ppx,ppy,Rp*Rs,0,7);ctx.fill();
+    ctx.strokeStyle='rgba(120,130,150,.5)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText('TRANSIT',LX+1,13);
+    var f=flux(px),cx0=RX,yTop=topM+ph*0.12,yBot=topM+ph*0.66;
+    function fy(fl){return yTop+(1-fl)/(Rp*Rp*1.6)*(yBot-yTop);}
+    ctx.strokeStyle='rgba(242,169,59,.35)';ctx.lineWidth=1.4;ctx.beginPath();
+    for(var i=0;i<=120;i++){var xx=i/120,X=cx0+xx*pw2,Y=fy(flux(xx*3-1.5));i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);}
+    ctx.stroke();
+    ctx.fillStyle=AM;var lim=Math.floor(ph01*80);
+    for(var i=0;i<=lim;i++){var xx=i/80,X=cx0+xx*pw2,Y=fy(flux(xx*3-1.5)+nz(i)*0.006);ctx.globalAlpha=.8;ctx.beginPath();ctx.arc(X,Y,1.5,0,7);ctx.fill();}
+    ctx.globalAlpha=1;
+    var cX=cx0+ph01*pw2;
+    ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cX,yTop-6);ctx.lineTo(cX,yBot+6);ctx.stroke();
+    ctx.fillStyle=INK;ctx.beginPath();ctx.arc(cX,fy(f),3,0,7);ctx.fill();
+    ctx.fillStyle=DIM;ctx.textAlign='left';ctx.fillText('LIGHT CURVE',cx0+1,13);
+    ctx.textAlign='right';ctx.fillText('flux',w-pad-1,yTop-7);
+    var transiting=f<1-Rp*Rp*0.3, P=transiting?0.90+0.08*Math.abs(Math.sin(t*3)):0.03+0.02*Math.abs(Math.sin(t));
+    var vyv=topM+ph*0.85, bw=pw2-6;
+    ctx.fillStyle=DIM;ctx.textAlign='left';ctx.fillText('NEURAL NET',cx0+1,vyv-7);
+    ctx.strokeStyle='rgba(120,124,134,.5)';ctx.lineWidth=1;ctx.strokeRect(cx0,vyv,bw,7);
+    ctx.fillStyle=transiting?GR:BL;ctx.fillRect(cx0,vyv,bw*P,7);
+    ctx.textAlign='right';ctx.font='700 10px '+MONO;ctx.fillStyle=transiting?GR:DIM;
+    ctx.fillText((transiting?'EXOPLANET  P=':'monitoring  P=')+P.toFixed(2),w-pad-1,vyv-7);
+    ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;ctx.strokeRect(LX,topM,pw,ph);ctx.strokeRect(RX,topM,pw2,ph);
+  }
+  function loop(){t+=0.02;draw();if(!RM)requestAnimationFrame(loop);}
+  if('ResizeObserver' in window){new ResizeObserver(function(){draw();}).observe(cv);}
+  draw(); if(!RM)requestAnimationFrame(loop);
 })();
 </script>
 </body>
