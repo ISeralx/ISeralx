@@ -9,8 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@200;300;400;500;600;700;800&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#000; --txt:#FFFFFF; --muted:#9A9AA2; --faint:#6A6A72;
-    --line:rgba(255,255,255,.13); --line2:rgba(255,255,255,.07);
+    --bg:#0a0a0b; --txt:#ececee; --muted:#83838b; --faint:#5a5a62;
+    --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.055);
+    --accent:#ff6a2b; --accent-dim:rgba(255,106,43,.14);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -27,7 +28,7 @@
 
   /* atmospheric glow */
   .glow{position:fixed;inset:0;pointer-events:none;z-index:0;
-    background:radial-gradient(ellipse 90% 55% at 50% -8%, rgba(58,66,90,.45), rgba(0,0,0,0) 60%);}
+    background:radial-gradient(ellipse 80% 45% at 50% -10%, rgba(255,106,43,.06), rgba(0,0,0,0) 68%);}
   .content{position:relative;z-index:1}
 
   .ph{color:#fff;border-bottom:1px dotted #fff;opacity:.55}
@@ -39,33 +40,33 @@
   nav .brand{font-weight:600;letter-spacing:.3em}
   nav .links{display:flex;gap:26px}
   nav .links a{color:var(--muted);transition:color .2s}
-  nav .links a:hover{color:#fff}
+  nav .links a:hover{color:var(--accent)}
   @media(max-width:620px){nav .links{display:none}}
 
   /* HERO */
   .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 70px;position:relative;overflow:hidden}
   #heroBg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.7}
   .hero-inner{position:relative;z-index:1}
-  .kicker{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);margin-bottom:30px}
+  .kicker{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--accent);margin-bottom:30px}
   .hero h1{font-family:"Barlow Semi Condensed",sans-serif;font-weight:700;text-transform:uppercase;
     font-size:clamp(52px,12vw,128px);line-height:.92;letter-spacing:.01em;margin-bottom:26px}
   .statement{font-weight:200;font-size:clamp(20px,3.2vw,34px);letter-spacing:.01em;line-height:1.2;max-width:780px;margin-bottom:28px}
-  .statement b{font-weight:600}
+  .statement b{font-weight:600;color:var(--accent)}
   .lede{font-size:clamp(15px,1.9vw,18px);color:var(--muted);max-width:620px;font-weight:300}
   .now{margin-top:18px;font-size:13px;letter-spacing:.05em;color:var(--faint);text-transform:uppercase}
   .now b{color:var(--muted);font-weight:500}
   .cta{margin-top:46px;display:flex;gap:14px;flex-wrap:wrap}
   .btn{display:inline-block;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
     padding:15px 28px;border:1px solid var(--line);transition:all .22s}
-  .btn:hover{background:#fff;color:#000;border-color:#fff}
-  .btn.solid{background:#fff;color:#000;border-color:#fff}
-  .btn.solid:hover{background:transparent;color:#fff;border-color:#fff}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.solid{background:var(--accent);color:#0a0a0b;border-color:var(--accent)}
+  .btn.solid:hover{background:transparent;color:var(--accent);border-color:var(--accent)}
 
   /* SECTION SHELL */
   section{padding:96px 0;border-top:1px solid var(--line2)}
-  .sec-label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:34px;
+  .sec-label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:34px;
     display:flex;align-items:center;gap:16px}
-  .sec-label::before{content:"";width:34px;height:1px;background:var(--muted)}
+  .sec-label::before{content:"";width:34px;height:1px;background:var(--accent)}
   h2{font-family:"Barlow Semi Condensed",sans-serif;font-weight:700;text-transform:uppercase;
     font-size:clamp(30px,5.5vw,56px);line-height:1;letter-spacing:.01em;margin-bottom:32px}
 
@@ -82,7 +83,7 @@
   .proj{border-top:1px solid var(--line);padding:34px 0;display:grid;gap:8px;transition:padding-left .25s}
   .proj:hover{padding-left:10px}
   .proj:last-child{border-bottom:1px solid var(--line)}
-  .proj .ptag{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+  .proj .ptag{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent)}
   .proj h3{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;text-transform:uppercase;
     font-size:clamp(22px,3.4vw,32px);line-height:1.04;letter-spacing:.01em}
   .proj .meta{font-size:13px;letter-spacing:.05em;color:var(--faint);text-transform:uppercase}
@@ -91,11 +92,11 @@
   .stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .chip{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
     border:1px solid var(--line);padding:5px 11px}
-  .chip.acc{color:#fff;border-color:rgba(255,255,255,.4)}
+  .chip.acc{color:var(--accent);border-color:rgba(255,106,43,.4)}
   .plinks{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
   .plinks a{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff;
     border:1px solid var(--line);padding:9px 15px;transition:all .22s}
-  .plinks a:hover{background:#fff;color:#000;border-color:#fff}
+  .plinks a:hover{border-color:var(--accent);color:var(--accent)}
   /* featured project: text left, live visual right */
   .proj.feat{align-items:center}
   @media(min-width:860px){.proj.feat{grid-template-columns:1.55fr 1fr;gap:44px}}
@@ -124,7 +125,7 @@
   .contact-grid{display:flex;flex-wrap:wrap;gap:14px}
   .contact-grid a{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.12em;
     text-transform:uppercase;border:1px solid var(--line);padding:15px 22px;transition:all .22s}
-  .contact-grid a:hover{background:#fff;color:#000;border-color:#fff}
+  .contact-grid a:hover{border-color:var(--accent);color:var(--accent)}
 
   footer{padding:54px 0;text-align:center;border-top:1px solid var(--line2)}
   footer span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint)}
