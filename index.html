@@ -173,7 +173,7 @@
         <p>I got obsessed with the <b>P vs NP problem at 14</b> — not because I was going to solve it, but because attacking the impossible with pure reasoning never stopped being the thing I love most.</p>
         <p>The pattern has held across every domain since: take a hard, open-ended problem, build the model, and <b>actually deploy it</b> where it has to work. Convex optimization to land a rocket. Multi-agent control to find what's hidden underground. A cross-venue execution engine trading my own capital on prediction markets. AI tools real businesses can use.</p>
         <p>Scientific rigor, real deployment, and markets — that intersection <b>is</b> quantitative research and trading. It's where I want to point everything I have, at the highest level.</p>
-        <div class="langs">Languages — <b>Spanish</b> Native · <b>English</b> C1 (Cambridge certified) · <b>Catalan</b> C1</div>
+        <div class="langs">Languages — <b>Spanish</b> Native · <b>English</b> C1 (Cambridge certified) · <b>Catalan</b> C1 · <b>French</b> A2</div>
       </div>
       <div class="about-media"><canvas id="pnpCanvas" role="img" aria-label="The P versus NP problem: a brute-force search tree explodes exponentially while a single certificate path is verified in polynomial time"></canvas></div>
     </div>
@@ -216,7 +216,7 @@
         <span class="ptag">Aerospace · GNC</span>
         <h3>Powered-Descent Guidance &amp; Control</h3>
         <div class="meta">MSc Thesis · Space Systems · Universidad Europea</div>
-        <p>Real-time trajectory optimization for autonomous rocket landing — the final 2&nbsp;km of powered descent, the same convex-guidance family behind SpaceX booster landings. The min-fuel problem is <b>non-convex</b> (the engine can't switch off), so I make it convex with <b>lossless convexification</b> and solve the resulting SOCP. Reproduces the Mars-lander benchmark of Malyuta et&nbsp;al. (2022): <b>t_f* = 75 s</b>, exact landing, bang-bang throttle. The interactive demo flies the real solver output.</p>
+        <p>Real-time trajectory optimization for autonomous rocket landing — the final 2&nbsp;km of powered descent, the same convex-guidance family behind SpaceX booster landings. The min-fuel problem is <b>non-convex</b> (the engine can't switch off), so I make it convex with <b>lossless convexification</b> and solve the resulting SOCP. Reproduces the Mars-lander benchmark of Malyuta et&nbsp;al. (2022): <b><i>t</i><sub>f</sub><sup>∗</sup>&nbsp;=&nbsp;75&nbsp;s</b>, exact landing, bang-bang throttle. The interactive demo flies the real solver output.</p>
         <div class="plinks">
           <a href="https://iseralx.github.io/powered_descendent/" target="_blank">Interactive demo</a>
           <a href="https://github.com/ISeralx/powered_descendent" target="_blank">Code &amp; data (GitHub)</a>
@@ -490,7 +490,7 @@
     ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='left';ctx.fillText('POWERED DESCENT',ml,16);
     var ph= landed?'TOUCHDOWN' : (p<0.46?'BRAKING':(thr<0.3?'COAST · MIN':'LANDING BURN'));
     ctx.fillStyle=landed?GR:AM;ctx.font='700 9px '+MONO;ctx.textAlign='right';ctx.fillText(ph,w-mr,16);
-    ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='right';ctx.fillText('t_f* 75 s · bang-bang · exact landing',w-mr,h-10);
+    ctx.fillStyle=DIM;ctx.font='9px '+MONO;ctx.textAlign='right';ctx.fillText('optimal flight time 75 s · bang-bang · exact landing',w-mr,h-10);
     // corner ticks
     ctx.strokeStyle=DIM;ctx.globalAlpha=.4;ctx.lineWidth=1;var kk=7;
     var cs=[[ml,mt,1,1],[w-mr,mt,-1,1],[ml,h-mb,1,-1],[w-mr,h-mb,-1,-1]];
